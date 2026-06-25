@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إمبراطورية NOVA الحصينة | 20 Scripts & Cyber Games</title>
+    <style>
+        body {
+            margin: 0;
+            overflow-x: hidden;
+            background-color: #010105;
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+        }
+        #ui-container {
+            position: relative;
+            z-index: 2;
+            padding: 30px;
+            box-sizing: border-box;
+            pointer-events: none;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            pointer-events: auto;
+        }
+        header h1 {
+            font-size: 4.5rem;
+            margin: 0;
+            color: #00ffff;
+            text-shadow: 0 0 20px #00ffff, 0 0 50px #00ffff;
+            letter-spacing: 5px;
+        }
+        header p {
+            color: #d1d1d1;
+            font-size: 1.4rem;
+            margin-top: 10px;
+        }
+        /* صندوق الحماية القانوني من الحظر */
+        .disclaimer-box {
+            background: rgba(255, 0, 127, 0.1);
+            border: 1px solid #ff007f;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px auto;
+            max-width: 900px;
+            text-align: center;
+            font-size: 0.95rem;
+            color: #ffb3d1;
+            pointer-events: auto;
+            backdrop-filter: blur(5px);
+        }
+        .main-nav {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-bottom: 50px;
+            pointer-events: auto;
+            flex-wrap: wrap;
+        }
+        .nav-card {
+            background: rgba(4, 4, 12, 0.9);
+            border: 2px solid rgba(0, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 25px;
+            width: 280px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(10px);
+        }
+        .nav-card:hover {
+            transform: translateY(-12px);
+            border-color: #00ffff;
+            box-shadow: 0 0 35px rgba(0, 255, 255, 0.7);
+            background: rgba(0, 255, 255, 0.1);
+        }
+        .nav-card h2 { margin: 0 0 10px 0; color: #00ffff; font-size: 1.6rem; }
+        .nav-card p { margin: 0; color: #bbb; font-size: 0.95rem; line-height: 1.4; }
+
+        .content-section {
+            display: none;
+            background: rgba(5, 5, 12, 0.95);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 1000px;
+            margin: 0 auto 60px auto;
+            pointer-events: auto;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 15px 50px rgba(0,0,0,0.7);
+            animation: slideUp 0.4s ease-out forwards;
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .section-title {
+            color: #00ffff;
+            border-bottom: 2px dashed #00ffff;
+            padding-bottom: 15px;
+            margin-top: 0;
+            font-size: 2.2rem;
+            text-shadow: 0 0 10px #00ffff;
+        }
+        .script-box {
+            margin-bottom: 35px;
+            background: rgba(255,255,255,0.02);
+            padding: 25px;
+            border-radius: 10px;
+            border-right: 5px solid #00ffff;
+        }
+        .script-box h3 { margin-top: 0; color: #ff007f; font-size: 1.4rem; }
+        pre {
+            background: #010103;
+            padding: 18px;
+            border-radius: 8px;
+            border: 1px solid #222;
+            overflow-x: auto;
+            text-align: left;
+            direction: ltr;
+            color: #39ff14;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.95rem;
+        }
+        .cyber-desc {
+            color: #e5e5e5;
+            line-height: 1.8;
+            font-size: 1.05rem;
+            margin-bottom: 10px;
+        }
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        .game-box {
+            background: rgba(10, 10, 25, 0.85);
+            border: 1px solid #00ffff33;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+        }
+        .game-box h3 { color: #00ffff; margin-top: 0; font-size: 1.4rem; }
+        #gameCanvas {
+            background: #050505;
+            border: 2px solid #ff007f;
+            display: block;
+            margin: 15px auto;
+            max-width: 100%;
+            box-shadow: 0 0 20px rgba(255, 0, 127, 0.5);
+        }
+        .game-btn {
+            padding: 12px 26px;
+            background: linear-gradient(45deg, #00ffff, #ff007f);
+            border: none;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: 0.2s;
+        }
+        .game-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
+        }
+        .design-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+        .design-item {
+            background: linear-gradient(135deg, #050515, #0a0a25);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid rgba(0, 255, 255, 0.1);
+            transition: 0.3s;
+            position: relative;
+        }
+        .design-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 4px;
+            height: 100%;
+            background: #ff007f;
+        }
+        .design-item:hover {
+            border-color: #00ffff;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+            transform: scale(1.03);
+        }
+        .design-item h4 { margin: 0 0 12px 0; color: #00ffff; font-size: 1.3rem; }
+        .design-item p { color: #ccc; line-height: 1.7; margin: 0; font-size: 1rem; }
+        .tag {
+            background: rgba(0, 255, 255, 0.15);
+            color: #00ffff;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            display: inline-block;
+            margin-bottom: 12px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="canvas-container"></div>
+
+    <div id="ui-container">
+        <header>
+            <h1>NOVA CYBER EMPIRE</h1>
+            <p>المكتبة الموسعة: أنظمة حماية متقدمة، ألعاب تفاعلية، وعجلة حظ ذكية ومحدودة الاستخدام اليومي</p>
+        </header>
+
+        <div class="disclaimer-box">
+            <strong>⚠️ إخلاء مسؤولية قانوني وأخلاقي (Educational Disclaimer):</strong><br>
+            كل الأكواد، السكربتات، وأدوات الفحص المتواجدة هنا معروضة لأغراض البحث العلمي، التعليم الأخلاقي، واختبار كفاءة الأنظمة المحلية فقط. 
+            صاحب الموقع (Nova) غير مسؤول عن أي استخدام تخريبي أو غير قانوني لهذه الأدوات.
+            <br><span style="font-size: 0.8rem; opacity: 0.8;">All source codes are shared strictly for educational purposes, white-hat analysis, and defensive simulation under cybersecurity guidelines.</span>
+        </div>
+
+        <div class="main-nav">
+            <div class="nav-card" onclick="showSection('cyber')">
+                <h2>ترسانة الـ 20 سكربت ⚡</h2>
+                <p>مجموعة ضخمة من أدوات بايثون الحقيقية والمفيدة جداً مع شرح تفصيلي دقيق لكل أداة</p>
+            </div>
+            <div class="nav-card" onclick="showSection('games')">
+                <h2>منطقة الألعاب المتجددة 🎮</h2>
+                <p>ألعاب تفاعلية، من ضمنها لعبة المربعات وعجلة الحظ الذكية المحدودة بـ 5 محاولات يومياً</p>
+            </div>
+            <div class="nav-card" onclick="showSection('designs')">
+                <h2>مختبر التكتيكات الأمنية 🎨</h2>
+                <p>مفاهيم متقدمة حول البيئات المعزولة، الحماية البرمجية، وهندسة الأكواد الحصينة</p>
+            </div>
+        </div>
+
+        <div id="cyber" class="content-section">
+            <h2 class="section-title">موسوعة سكربتات بايثون الأمنية المتكاملة</h2>
+            
+            <div class="script-box">
+                <h3>1. فاحص المنافذ الأساسي (Network Port Scanner)</h3>
+                <p class="cyber-desc">💡 **الشرح المفصل:** يقوم هذا السكربت بالاتصال المباشر بمجموعة من المنافذ (Ports) الافتراضية على خادم معين للتأكد مما إذا كانت مفتوحة أم مغلقة.</p>
+                <pre>import socket
+target = "127.0.0.1"
+for port in range(1, 1025):
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.settimeout(0.1)
+    if s.connect_ex((target, port)) == 0:
+        print(f"[+] المنفذ {port} مفتوح ومتاح للاتصال! 🔓")
+    s.close()</pre>
+            </div>
+
+            <div class="script-box">
+                <h3>2. قناص معلومات الخادم (Banner Grabber)</h3>
+                <p class="cyber-desc">💡 **الشرح المفصل:** يتصل بالمنفذ الخاص بالويب ويرسل طلباً بدائياً ليجبر الخادم على الرد بالسطر التعريفي الخاص به (Banner).</p>
+                <pre>import socket
+s = socket.socket()
+s.settimeout(2)
+try:
+    s.connect(("127.0.0.1", 80))
+    s.send(b"GET / HTTP/1.1\r\n\r\n")
+    print(f"[!] بيانات السيرفر المكتشفة: {s.recv(1024).decode()}")
+except:
+    print("[-] تعذر جلب البانر.")</pre>
+            </div>
+
+            <div class="script-box">
+                <h3>3. فاحص الروابط وحالة الويب (HTTP Status Checker)</h3>
+                <p class="cyber-desc">💡 **الشرح المفصل:** يرسل طلبات HTTP تسمى GET ويقوم بتحليل كود الرد للتأكد من حالة اتصال الموقع الإلكتروني.</p>
+                <pre>import requests
+url = "https://www.google.com"
+try:
+    status = requests.get(url, timeout=3).status_code
+    print(f"[✅] الرابط شغال تمام، كود الاستجابة: {status}")
+except:
+    print("[❌] الرابط مغلق أو أوفلاين.")</pre>
+            </div>
+
+            <div class="script-box">
+                <h3>4. محاكي هجوم القوة الغاشمة (Brute Force Simulator)</h3>
+                <p class="cyber-desc">💡 **الشرح المفصل:** تمر الدالة على قائمة مجهزة مسبقاً من كلمات المرور وتجربها واحدة تلو الأخرى حتى تجد الكلمة الصحيحة واختبار قوة الدفاع.</p>
+                <pre>passwords = ["12345", "admin", "nova2026", "password"]
+correct_one = "nova2026"
+for attempt in passwords:
+    if attempt == correct_one:
+        print(f"[🎉] تم كسر التشفير بنجاح! كلمة السر هي: {attempt}")
+        break</pre>
+            </div>
+
+            <div class="script-box">
+                <h3>5. مستخرج عناوين الـ IP (DNS IP Resolver)</h3>
+                <p class="cyber-desc">💡 **الشرح المفصل:** يعتمد على بروتوكول DNS لترجمة أسماء النطاقات المفهومة للبشر إلى عناوين رقمية (IP Addresses).</p>
+                <pre>import socket
+domain = "google.com"
+ip = socket.gethostbyname(domain)
+print(f"[🎯] عنوان الـ IP الحقيقي لموقع {domain} هو: {ip}")</pre>
+            </div>
+
+            <div class="script-box">
+                <h3>6. مشفر النصوص السري (Simple Text Encrypter)</h3>
+                <p class="cyber-desc">💡 **الشرح المفصل:** يقوم بعملية تشفير بدائية تعتمد على إزاحة القيم الحرفية بمقدار معين لحماية النصوص المخزنة.</p>
+                <pre>text = "Nova Cyber"
+encrypted = [ord(char) + 5 for char in text]
+print(f"[🔒] النص المشفر كأرقام حماية: {encrypted}")</pre>
+            </div>
+
+            <div class="script-box">
+                <h3>7. فاحص سلامة الملفات (File Hash Calculator)</h3>
+                <p class="cyber-desc">💡 **الشرح المفصل:** يستعمل خوارزمية SHA-256 لتوليد بصمة فريدة وثابتة الطول لأي نص أو ملف لكشف التلاعب والتعديلات.</p>
+                <pre>import hashlib
+data = b"Nova Security Data"
+file_hash = hashlib.sha256(data).hexdigest()
+print(f"[🛡️] البصمة الرقمية الفريدة للملف: {file_hash}")</pre>
+            </div>
+
+            <div class="script-box">
+                <h3>8. صائد ومستخرج الروابط الفرعية (Subdomain Finder Basic)</h3>
+                <p class="cyber-desc">💡 **الشرح المفصل:** يقوم بتخمين واختبار النطاقات الفرعية التابعة للموقع الأصلي للبحث عن أي ثغرات أو خوادم مطورين منسية.</p>
+                <pre>import requests
+subs = ["admin", "blog", "mail", "dev"]
+main_url = "google.com"
+for sub in subs:
+    url = f"https://{sub}.{main_url}"
+    try:
+        if requests.get(url, timeout=2).status_code == 200:
+            print(f"[+] نطاق فرعي نشط مكتشف: {url}")
+    except: pass</pre>
+            </div>
+
+            <div class="script-box">
+                <h3>9. ساحب عناوين الـ Headers الأمنية (Security Headers Analyzer)</h3>
+                <p class="cyber-desc">💡 **الشرح المفصل:** يفحص ترويسات الاستجابة القادمة من السيرفر للتأكد من تفعيل جدران حماية المتصفح الحركية.</p>
+                <pre>import requests
+res = requests.get("https://www.google.com")
+headers = ["X-Frame-Options", "Content-Security-Policy"]
+for h in headers:
+    print(f"[📋] {h}: {res.headers.get(h, 'غير مفعّل ⚠️')}")</pre>
+            </div>
+
+            <div class="script-box">
+                <h3>10. كاشف الأجهزة المتصلة بالشبكة (Local Ping Sweeper)</h3>
+                <p class="cyber-desc">💡 **الشرح المفصل:** يرسل طلبات صدى حزم الـ ICMP بصورة تسلسلية إلى عناوين الأجهزة المتواجدة معك على نفس الشبكة المحلية.</p>
+                <pre>import os
+for i in range(1, 5):
+    ip = f"192.168.1.{i}"
+    response = os.system(f"ping -n 1 {ip}" if os.name == 'nt' else f"ping -c 1 {ip} > /dev/null")
+    if response == 0:
+        print(f"[💻] الجهاز ذو العنوان {ip} نشط متصل بالشبكة!")</pre>
+            </div>
+        </div>
+
+        <div id="games" class="content-section">
+            <h2 class="section-title">منطقة الألعاب السيبرانية التفاعلية (محدودة الاستخدام)</h2>
+            <div class="games-grid">
+                
+                <div class="game-box">
+                    <h3>1. تفادي الفيروسات السيبرانية 🚀</h3>
+                    <p style="color: #ff007f; font-weight: bold;">تحرك بأسهم الكيبورد يميناً ويساراً لتفادي الفيروسات.</p>
+                    <button class="game-btn" onclick="startSpaceGame()">ابدأ اللعب</button>
+                    <canvas id="gameCanvas" width="340" height="340"></canvas>
+                </div>
+
+                <div class="game-box">
+                    <h3>2. فك التشفير الرقمي الذكي 💻</h3>
+                    <p>خمن الرقم السري من 1 لـ 50 وافتح النظام البرمي.</p>
+                    <input type="number" id="hackGuess" min="1" max="50" style="padding:10px; border-radius:5px; border:1px solid #00ffff; background:#111; color:white; width:80px; text-align:center;">
+                    <button class="game-btn" onclick="playHackGuess()">خمن الآن</button>
+                    <p id="guessResult" style="color:#00ffff; font-weight:bold; margin-top:15px;">انتظار التخمين الأول...</p>
+                </div>
+
+                <div class="game-box">
+                    <h3>3. روليت المكافآت والأكواد غير المتكررة 🌌</h3>
+                    <p style="color: #ff007f; font-weight: bold;" id="spinCounterText">اللفات المتبقية لك اليوم: 5 لافات</p>
+                    <button class="game-btn" id="spinButton" onclick="spinNovaWheel()">لف العجلة الآن</button>
+                    <div id="wheelResult" style="margin-top:25px; padding:15px; border-radius:8px; background:#050515; border-left:4px solid #ff007f;">مستعد لطلب كودك الفريد؟ لِف العجلة!</div>
+                </div>
+
+            </div>
+        </div>
+
+        <div id="designs" class="content-section">
+            <h2 class="section-title">مختبر وأبحاث الأمن السيبراني والأنظمة المتقدمة</h2>
+            <div class="design-grid">
+                <div class="design-item">
+                    <span class="tag">محاكاة واختبار</span>
+                    <h4>بيئات الـ Penetration Testing المعزولة</h4>
+                    <p>بناء وتأسيس غرف افتراضية رقمية معزولة تماماً لمحاكاة الهجمات السيبرانية واختبار كفاءة جدران الحماية الأمنية وسكربتات بايثون بكفاءة عالية بدون إلحاق الأضرار بالبنية التحتية الأساسية.</p>
+                </div>
+                <div class="design-item">
+                    <span class="tag">تحصين وحماية البرمجيات</span>
+                    <h4>تصميم الواجهات المأمنة والـ Secure Code</h4>
+                    <p>تطوير الشيفرات البرمجية لتطبيقات الويب والأنظمة مع التركيز المطلق على سد ثغرات الاختراق وحماية مدخلات المستخدمين من عمليات الحقن الخبيثة.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+    <script>
+        // --- محرك الفضاء الـ 3D الخلفي ---
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        container.appendChild(renderer.domElement);
+
+        const starsGeometry = new THREE.BufferGeometry();
+        const starsCount = 2000;
+        const starPositions = new Float32Array(starsCount * 3);
+        for(let i=0; i<starsCount*3; i++) starPositions[i] = (Math.random() - 0.5) * 600;
+        starsGeometry.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
+        const starsMaterial = new THREE.PointsMaterial({ color: 0x00ffff, size: 0.6 });
+        const starField = new THREE.Points(starsGeometry, starsMaterial);
+        scene.add(starField);
+
+        const coreGeo = new THREE.IcosahedronGeometry(2, 1);
+        const coreMat = new THREE.MeshBasicMaterial({ color: 0x00ffff, wireframe: true });
+        const novaCore = new THREE.Mesh(coreGeo, coreMat);
+        scene.add(novaCore);
+
+        camera.position.z = 15;
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+
+        function runEngine() {
+            requestAnimationFrame(runEngine);
+            novaCore.rotation.x += 0.003;
+            novaCore.rotation.y += 0.005;
+            starField.rotation.y += 0.0005;
+            controls.update();
+            renderer.render(scene, camera);
+        }
+        runEngine();
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(sec => sec.style.display = 'none');
+            document.getElementById(sectionId).style.display = 'block';
+        }
+
+        // ================= منطق لعبة المربعات =================
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+        let player, obstacles, score, gameInterval;
+        let isGameOver = false;
+
+        function startSpaceGame() {
+            clearInterval(gameInterval);
+            player = { x: 155, y: 300, width: 25, height: 25, speed: 20 };
+            obstacles = [];
+            score = 0;
+            isGameOver = false;
+            document.removeEventListener("keydown", handleGameInput);
+            document.addEventListener("keydown", handleGameInput);
+            gameInterval = setInterval(updateSpaceGame, 30);
+        }
+
+        function handleGameInput(e) {
+            if (!isGameOver) {
+                if (e.key === "ArrowLeft" && player.x > 0) player.x -= player.speed;
+                if (e.key === "ArrowRight" && player.x < canvas.width - player.width) player.x += player.speed;
+            }
+        }
+
+        function updateSpaceGame() {
+            if (isGameOver) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "#00ffff";
+            ctx.fillRect(player.x, player.y, player.width, player.height);
+            
+            if (Math.random() < 0.06) {
+                obstacles.push({ x: Math.random() * (canvas.width - 20), y: 0, width: 20, height: 20, speed: 5 });
+            }
+            
+            ctx.fillStyle = "#ff007f";
+            for (let i = obstacles.length - 1; i >= 0; i--) {
+                obstacles[i].y += obstacles[i].speed;
+                ctx.fillRect(obstacles[i].x, obstacles[i].y, obstacles[i].width, obstacles[i].height);
+                
+                if (player.x < obstacles[i].x + obstacles[i].width && player.x + player.width > obstacles[i].x && player.y < obstacles[i].y + obstacles[i].height && player.y + player.height > obstacles[i].y) {
+                    clearInterval(gameInterval);
+                    isGameOver = true;
+                    ctx.fillStyle = "rgba(0,0,0,0.8)";
+                    ctx.fillRect(0,0,canvas.width,canvas.height);
+                    ctx.fillStyle = "#ff007f";
+                    ctx.font = "20px Arial";
+                    ctx.fillText("💥 تم اختراق النظام!", 70, 170);
+                    return;
+                }
+            }
+        }
+
+        // ================= لعبة 2: تخمين الهاكر =================
+        let secretCode = Math.floor(Math.random() * 50) + 1;
+        let guessAttempts = 0;
+        function playHackGuess() {
+            const input = document.getElementById("hackGuess").value;
+            const resultDisplay = document.getElementById("guessResult");
+            if(!input) return;
+            guessAttempts++;
+            if(parseInt(input) === secretCode) {
+                resultDisplay.style.color = "#39ff14";
+                resultDisplay.innerHTML = `🎉 ممتاز! الكود هو ${secretCode}.`;
+                secretCode = Math.floor(Math.random() * 50) + 1;
+                guessAttempts = 0;
+            } else {
+                resultDisplay.style.color = "#ff007f";
+                resultDisplay.innerHTML = parseInt(input) < secretCode ? "❌ الرقم الحقيقي [أكبر]" : "❌ الرقم الحقيقي [أصغر]";
+            }
+        }
+
+        // ================= ترسانة الـ 20 سكربت المخصصة للعجلة =================
+        const wheelOptions = [
+            { id: 1, message: "🎁 فزت بسكربت قناص الـ IP الخفي (IP Pinger Pro)!", code: `import os\ntarget = "8.8.8.8"\nresponse = os.system("ping -c 1 " + target)\nif response == 0: print("Target is UP! ✅")` },
+            { id: 2, message: "🚀 فزت بأداة تشفير النصوص العسكرية (AES Simulator)!", code: `import base64\ntext = "NovaSecret"\nencoded = base64.b64encode(text.encode())\nprint("النص المشفر الحصين:", encoded)` },
+            { id: 3, message: "🔒 فزت بسكربت مسح كاش المتصفح وتنظيف الـ DNS محلياً!", code: `import os\nimport sys\nif sys.platform.startswith('win'): os.system('ipconfig /flushdns')` },
+            { id: 4, message: "📡 فزت بسكربت جلب الـ Mac Address لجهازك (Hardware ID)!", code: `import uuid\nmac = ':'.join(['{:02x}'.format((uuid.getnode() >> ele) & 0xff) for ele in range(0,8*6,8)][::-1])\nprint(mac)` },
+            { id: 5, message: "🕵️ فزت بسكربت كاشف نظام التشغيل تلقائياً (OS Detector)!", code: `import platform\nprint("نظام التشغيل المكتشف:", platform.system())` },
+            { id: 6, message: "🔥 فزت بسكربت فاحص المنافذ السريع لمنفذ الـ SSH!", code: `import socket\ns = socket.socket()\ns.settimeout(1.0)\nif s.connect_ex(("127.0.0.1", 22)) == 0: print("SSH Open")` },
+            { id: 7, message: "🧹 فزت بسكربت الحذف الآمن وحرق الملفات بدون استرجاع!", code: `import os\nif os.path.exists("secret.txt"):\n    with open("secret.txt", "wb") as f: f.write(os.urandom(1024))\n    os.remove("secret.txt")` },
+            { id: 8, message: "🌍 فزت بسكربت جلب الـ IP الخارجي للشبكة (Public IP Getter)!", code: `import requests\nip = requests.get('https://api.ipify.org').text\nprint(f"IP: {ip}")` },
+            { id: 9, message: "⏳ فزت بسكربت مراقبة وقت تشغيل السيرفرات (Uptime Monitor)!", code: `import time\nstart_time = time.time()\nprint("Uptime monitor is running...")` },
+            { id: 10, message: "🔑 فزت بمولد مفاتيح تشفير عشوائية مخصصة (Token Generator)!", code: `import secrets\nprint(secrets.token_hex(32))` },
+            { id: 11, message: "🔗 فزت بسكربت مستخرج الروابط من صفحات الويب!", code: `import requests, re\nhtml = requests.get("https://google.com").text\nlinks = re.findall(r'href=["\\'](http[s]?://.*?)["\\']', html)` },
+            { id: 12, message: "🔒 فزت بسكربت فاحص شهادات الحماية الرقمية SSL!", code: `import socket, ssl\nctx = ssl.create_default_context()\nwith ctx.wrap_socket(socket.create_connection(('google.com', 443)), server_hostname='google.com') as s: print(s.getpeercert())` },
+            { id: 13, message: "📸 فزت بمستخرج البيانات الخفية للصور (EXIF Metadata)!", code: `from PIL import Image\nimg = Image.open('image.jpg')\nprint(img._getexif())` },
+            { id: 14, message: "⚡ فزت بمدقق قوة كلمة المرور البرمجي الحركي!", code: `import re\ndef check(p): return len(p) >= 8 and re.search(r"[A-Z]", p)\nprint(check("Nova2026!"))` },
+            { id: 15, message: "🛡️ فزت بمحاكي جدار حماية تزييف طلبات الـ CSRF!", code: `token = "NOVA_123"\ndef val(t): return "Valid" if t == token else "Dropped"\nprint(val("FAKE"))` },
+            { id: 16, message: "🤖 فزت بأداة قراءة وتتبع ملفات التوجيه Robots.txt!", code: `import requests\nprint(requests.get("https://google.com/robots.txt").text[:200])` },
+            { id: 17, message: "⚙️ فزت بفاحص استهلاك الذاكرة والمعالج للعمليات الجارية!", code: `import psutil\nprint(f"CPU: {psutil.cpu_percent()}% | RAM: {psutil.virtual_memory().percent}%")` },
+            { id: 18, message: "📝 فزت بكاشف التلاعب بملفات الـ Hosts لحمايتك من التزييف!", code: `with open('/etc/hosts' if 'nt' not in id else r'C:\\Windows\\System32\\drivers\\etc\\hosts') as f: print(f.read())` },
+            { id: 19, message: "📂 فزت بسكربت جلب قائمة الملفات الكبيرة في السيرفر تلقائياً!", code: `import os\nfiles = [f for f in os.listdir('.') if os.path.getsize(f) > 1024*1024]\nprint("Big files:", files)` },
+            { id: 20, message: "🧩 فزت بسكربت فك تشفير وفحص حزم النصوص الملغومة!", code: `import base64\nprint(base64.b64decode(b'Tm92YVNlY3VyZQ==').decode())` }
+        ];
+
+        // --- نظام التخزين اليومي واللف الذكي الحصين ---
+        function getDailySpinsInfo() {
+            const today = new Date().toDateString();
+            let localData = JSON.parse(localStorage.getItem("nova_wheel_data"));
+            
+            if (!localData || localData.date !== today) {
+                localData = {
+                    date: today,
+                    count: 0,
+                    wonIds: localData ? localData.wonIds : []
+                };
+                localStorage.setItem("nova_wheel_data", JSON.stringify(localData));
+            }
+            return localData;
+        }
+
+        function updateDailySpinsInfo(data) {
+            localStorage.setItem("nova_wheel_data", JSON.stringify(data));
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const data = getDailySpinsInfo();
+            document.getElementById("spinCounterText").innerText = `اللفات المتبقية لك اليوم: ${5 - data.count} لافات`;
+            if(data.count >= 5) {
+                document.getElementById("spinButton").disabled = true;
+                document.getElementById("spinButton").innerText = "انتهت محاولاتك اليوم!";
+            }
+        });
+
+        function spinNovaWheel() {
+            const display = document.getElementById("wheelResult");
+            let data = getDailySpinsInfo();
+
+            if (data.count >= 5) {
+                display.innerHTML = "<span style='color:#ff007f;'>🚨 تم حظر المحاولة! لقد استهلكت الـ 5 لفات المتاحة لك اليوم بالكامل. عد غداً لتخطي جدار الحماية وسحب أكواد جديدة!</span>";
+                return;
+            }
+
+            const availableOptions = wheelOptions.filter(opt => !data.wonIds.includes(opt.id));
+
+            if (availableOptions.length === 0) {
+                display.innerHTML = "<span style='color:#39ff14;'>👑 مذهل يا إمبراطور! لقد قمت بسحب وامتلاك جميع الأكواد البرمجية المتواجدة في قاعدة البيانات بنجاح!</span>";
+                return;
+            }
+
+            display.innerHTML = "🌀 جاري فحص الحساب وسحب كود فريد غير مكرر...";
+            document.getElementById("spinButton").disabled = true;
+
+            setTimeout(() => {
+                const includeLuck = Math.random() > 0.25;
+
+                if (!includeLuck) {
+                    display.innerHTML = `
+                        <div style="color: #ff007f; font-weight: bold; font-size: 1.2rem; margin-bottom: 5px; text-shadow: 0 0 10px #ff007f;">
+                            ❌ للاسف! حظ أوفر المرة القادمة في سحب الأكواد... 🛡️
+                        </div>
+                        <p style="color: #bbb; font-size: 0.95rem; margin: 5px 0 0 0;">النظام لم يخصم منك هذه المحاولة! اضغط مجدداً فوراً وسجل كود جديد 😉</p>
+                    `;
+                } else {
+                    const randomChoice = availableOptions[Math.floor(Math.random() * availableOptions.length)];
+                    
+                    data.count += 1;
+                    data.wonIds.push(randomChoice.id);
+                    updateDailySpinsInfo(data);
+
+                    document.getElementById("spinCounterText").innerText = `اللفات المتبقية لك اليوم: ${5 - data.count} لافات`;
+
+                    display.innerHTML = `
+                        <div style="color: #00ffff; font-weight: bold; font-size: 1.1rem; margin-bottom: 12px; text-shadow: 0 0 10px #00ffff;">
+                            ${randomChoice.message}
+                        </div>
+                        <pre style="background: #010103; padding: 14px; border-radius: 8px; border: 1px solid #39ff14; color: #39ff14; font-family: monospace; text-align: left; direction: ltr; max-height: 180px; overflow-y: auto; box-shadow: 0 0 15px rgba(57, 255, 20, 0.2);">${randomChoice.code}</pre>
+                    `;
+                }
+
+                if (data.count < 5) {
+                    document.getElementById("spinButton").disabled = false;
+                } else {
+                    document.getElementById("spinButton").innerText = "انتهت محاولاتك اليوم!";
+                }
+
+            }, 800);
+        }
+    </script>
+</body>
+</html>
